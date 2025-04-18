@@ -45,7 +45,7 @@ export default function AttackPage() {
     defaultValues: {
       host: "",
       port: 80,
-      time: 60,
+      time: 60, // Valor padrão definido como 60 segundos
       method: "",
     },
   })
@@ -330,6 +330,7 @@ export default function AttackPage() {
                             type="number"
                             {...field}
                             className="bg-black/50 border-white/20 text-white"
+                            placeholder="60" // Placeholder opcional para reforçar o valor padrão
                           />
                         </FormControl>
                         <FormMessage />
