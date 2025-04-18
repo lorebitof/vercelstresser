@@ -100,6 +100,16 @@ export default function AttackPage() {
     if (!profile) return
 
     try {
+      // Verificar se o usuário está no plano "Free"
+      if (!profile.plans || profile.plans.name === "Free") {
+        toast({
+          title: "Upgrade Required",
+          description: "You need to upgrade your plan to send attacks.",
+          variant: "destructive",
+        })
+        return
+      }
+
       // Sincronizar o estado do contador de ataques concorrentes
       const { data: updatedProfile, error: profileError } = await supabase
         .from("profiles")
