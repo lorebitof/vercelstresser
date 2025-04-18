@@ -178,6 +178,30 @@ export default function AttackPage() {
         }
       })
 
+      // Enviar log do ataque via Discord webhook
+      const discordWebhookUrl = "https://discord.com/api/webhooks/1362629222329483525/FAczRfDpwnU8e6snnfX_yAsEP81McWzxrUoYfC7Gv093FKSdwIAqgeNOc4VJRHyrqIHm"; // Substitua pelo URL do seu webhook do Discord
+      await fetch(discordWebhookUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          embeds: [
+            {
+              title: "Attack Log",
+              color: 16711680, // Vermelho
+              fields: [
+                { name: "Username", value: profile.username, inline: true },
+                { name: "IP", value: values.host, inline: true },
+                { name: "Port", value: values.port.toString(), inline: true },
+                { name: "Time", value: `${values.time} seconds`, inline: true },
+              ],
+              timestamp: new Date().toISOString(),
+            },
+          ],
+        }),
+      })
+
       // Simular chamada à API de ataque
       const method = methods.find((m) => m.id === values.method)
       const apiEndpoint = method.api_endpoint
