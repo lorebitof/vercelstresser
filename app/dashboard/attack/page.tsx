@@ -67,10 +67,10 @@ export default function AttackPage() {
       if (profileData) {
         setProfile({
           ...profileData,
-          max_concurrent_attacks: profileData.plan_id ? (profileData.plans?.max_concurrent_attacks || profileData.max_concurrent_attacks || 0) : 0,
-          max_time: profileData.plan_id ? (profileData.plans?.max_time || profileData.max_time || 0) : 0,
+          max_concurrent_attacks: profileData.plans?.max_concurrent_attacks || profileData.max_concurrent_attacks || 0,
+          max_time: profileData.plans?.max_time || profileData.max_time || 0,
         })
-        form.setValue("time", profileData.plan_id ? (profileData.plans?.max_time || profileData.max_time || 0) : 0)
+        form.setValue("time", profileData.plans?.max_time || profileData.max_time || 0)
       }
 
       // Get attack methods
