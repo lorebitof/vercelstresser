@@ -99,6 +99,16 @@ export default function AttackPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!profile) return
 
+    // Check if the user is on a free plan
+    if (profile.plans?.name.toLowerCase() === "free") {
+      toast({
+        title: "Error",
+        description: "Free plan users cannot launch attacks. Upgrade your plan to access this feature.",
+        variant: "destructive",
+      })
+      return
+    }
+
     try {
       // Sincronizar o estado do contador de ataques concorrentes
       const { data: updatedProfile, error: profileError } = await supabase
