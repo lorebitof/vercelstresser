@@ -9,7 +9,7 @@ import { Loader2, Info } from "lucide-react"
 
 import { DashboardLayout } from "@/components/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -31,12 +31,12 @@ export default function AttackPage() {
   const [methods, setMethods] = useState<any[]>([])
   const [profile, setProfile] = useState<{
     id: string
-    username: string
+    username: string // Adicionado
     role: string
     concurrent_attacks: number
     max_concurrent_attacks: number
     max_time: number
-    plan_id: string | null // Atualizado para usar plan_id
+    plans?: { name: string; price: number }
   } | null>(null)
   const [selectedMethod, setSelectedMethod] = useState<any>(null)
 
@@ -45,13 +45,14 @@ export default function AttackPage() {
     defaultValues: {
       host: "",
       port: 80,
-      time: 60,
+      time: 60, // Valor padrão definido como 60 segundos
       method: "",
     },
   })
 
   useEffect(() => {
     async function fetchData() {
+      // Get user profile
       const {
         data: { user },
       } = await supabase.auth.getUser()
@@ -61,13 +62,18 @@ export default function AttackPage() {
         return
       }
 
-      const { data: profileData } = await supabase.from("profiles").select("*").eq("id", user.id).single()
+      const { data: profileData } = await supabase.from("profiles").select("*, plans(*)").eq("id", user.id).single()
 
       if (profileData) {
-        setProfile(profileData)
-        form.setValue("time", profileData.max_time || 60)
+        setProfile({
+          ...profileData,
+          max_concurrent_attacks: profileData.plans?.max_concurrent_attacks || profileData.max_concurrent_attacks || 0,
+          max_time: profileData.plans?.max_time || profileData.max_time || 0,
+        })
+        form.setValue("time", profileData.plans?.max_time || profileData.max_time || 0)
       }
 
+      // Get attack methods
       const { data: methodsData } = await supabase.from("attack_methods").select("*")
 
       if (methodsData) {
@@ -78,6 +84,7 @@ export default function AttackPage() {
     fetchData()
   }, [router, form])
 
+  // Watch for method changes to display API endpoint info
   const watchMethod = form.watch("method")
 
   useEffect(() => {
@@ -93,7 +100,8 @@ export default function AttackPage() {
     if (!profile) return
 
     try {
-      if (!profile.plan_id) {
+      // Verificar se o usuário está no plano "Free"
+      if (!profile.plans || profile.plans.name === "Free") {
         toast({
           title: "Upgrade Required",
           description: "You need to upgrade your plan to send attacks.",
@@ -102,6 +110,7 @@ export default function AttackPage() {
         return
       }
 
+      // Sincronizar o estado do contador de ataques concorrentes
       const { data: updatedProfile, error: profileError } = await supabase
         .from("profiles")
         .select("concurrent_attacks, max_concurrent_attacks")
@@ -114,6 +123,7 @@ export default function AttackPage() {
           description: "Failed to fetch updated profile data.",
           variant: "destructive",
         })
+        console.error("Error fetching profile data:", profileError)
         return
       }
 
@@ -125,6 +135,7 @@ export default function AttackPage() {
         }
       })
 
+      // Verificar se o limite de ataques concorrentes foi atingido
       if (updatedProfile.concurrent_attacks >= updatedProfile.max_concurrent_attacks) {
         toast({
           title: "Error",
@@ -134,6 +145,7 @@ export default function AttackPage() {
         return
       }
 
+      // Verificar se o tempo está dentro do limite permitido
       if (values.time > profile.max_time) {
         form.setError("time", {
           message: `Maximum time allowed is ${profile.max_time} seconds`,
@@ -143,7 +155,8 @@ export default function AttackPage() {
 
       setIsLoading(true)
 
-      const { error: attackError } = await supabase
+      // Criar registro de ataque no histórico
+      const { data: attackData, error: attackError } = await supabase
         .from("attack_history")
         .insert([
           {
@@ -155,15 +168,98 @@ export default function AttackPage() {
             status: "running",
           },
         ])
+        .select()
 
       if (attackError) throw attackError
 
+      // Atualizar contagem de ataques concorrentes
       const { error: updateError } = await supabase
         .from("profiles")
         .update({ concurrent_attacks: updatedProfile.concurrent_attacks + 1 })
         .eq("id", profile.id)
 
       if (updateError) throw updateError
+
+      setProfile((prev) => {
+        if (!prev) return null
+        return {
+          ...prev,
+          concurrent_attacks: prev.concurrent_attacks + 1,
+        }
+      })
+
+      // Enviar log do ataque via Discord webhook
+      const discordWebhookUrl = "https://discord.com/api/webhooks/1362629222329483525/FAczRfDpwnU8e6snnfX_yAsEP81McWzxrUoYfC7Gv093FKSdwIAqgeNOc4VJRHyrqIHm"; // Substitua pelo URL do seu webhook do Discord
+      await fetch(discordWebhookUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          embeds: [
+            {
+              title: "Attack Log",
+              color: 16711680, // Vermelho
+              fields: [
+                { name: "Username", value: profile.username, inline: true },
+                { name: "IP", value: values.host, inline: true },
+                { name: "Port", value: values.port.toString(), inline: true },
+                { name: "Time", value: `${values.time} seconds`, inline: true },
+              ],
+              timestamp: new Date().toISOString(),
+            },
+          ],
+        }),
+      })
+
+      // Simular chamada à API de ataque
+      const method = methods.find((m) => m.id === values.method)
+      const apiEndpoint = method.api_endpoint
+        .replace("{HOST}", values.host)
+        .replace("{PORT}", values.port.toString())
+        .replace("{TIME}", values.time.toString())
+
+      await fetch(apiEndpoint, { method: "GET" })
+
+      // Expirar ataque após o tempo definido
+      setTimeout(async () => {
+        // Atualizar o status do ataque para "completed"
+        const { error: updateStatusError } = await supabase
+          .from("attack_history")
+          .update({ status: "completed" })
+          .eq("user_id", profile.id)
+          .eq("host", values.host)
+          .eq("port", values.port)
+          .eq("method_id", values.method)
+
+        if (updateStatusError) {
+          console.error("Failed to update attack status:", updateStatusError)
+          return
+        }
+
+        // Zerar ataques concorrentes
+        const { error: resetError } = await supabase
+          .from("profiles")
+          .update({ concurrent_attacks: 0 })
+          .eq("id", profile.id)
+
+        if (!resetError) {
+          setProfile((prev) => {
+            if (!prev) return null
+            return {
+              ...prev,
+              concurrent_attacks: 0,
+            }
+          })
+        } else {
+          console.error("Failed to reset concurrent attacks:", resetError)
+        }
+
+        toast({
+          title: "Attack Completed",
+          description: `Attack on ${values.host}:${values.port} has completed.`,
+        })
+      }, values.time * 1000)
 
       toast({
         title: "Attack Started",
@@ -175,6 +271,7 @@ export default function AttackPage() {
         description: error.message || "Failed to start attack. Please try again.",
         variant: "destructive",
       })
+      console.error("Error during attack submission:", error)
     } finally {
       setIsLoading(false)
     }
@@ -243,6 +340,7 @@ export default function AttackPage() {
                             type="number"
                             {...field}
                             className="bg-black/50 border-white/20 text-white"
+                            placeholder="60" // Placeholder opcional para reforçar o valor padrão
                           />
                         </FormControl>
                         <FormMessage />
