@@ -105,48 +105,6 @@ export default function SettingsPage() {
     }
   }
 
-  async function upgradePlan(planId: string) {
-    setIsLoading(true)
-
-    try {
-      // In a real application, you would handle payment processing here
-
-      // Update user's plan
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-
-      if (!user) {
-        router.push("/login")
-        return
-      }
-
-      const { error } = await supabase.from("profiles").update({ plan_id: planId }).eq("id", user.id)
-
-      if (error) throw error
-
-      // Refresh profile data
-      const { data: profileData } = await supabase.from("profiles").select("*, plans(*)").eq("id", user.id).single()
-
-      if (profileData) {
-        setProfile(profileData)
-      }
-
-      toast({
-        title: "Plan Updated",
-        description: "Your subscription plan has been successfully updated.",
-      })
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to update plan. Please try again.",
-        variant: "destructive",
-      })
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
   return (
     <DashboardLayout isAdmin={profile?.role === "admin"}>
       <div className="flex flex-col gap-6">
@@ -248,51 +206,6 @@ export default function SettingsPage() {
             </CardContent>
           </Card>
         </div>
-
-        <Card className="bg-black/30 border-white/10 text-white">
-          <CardHeader>
-            <CardTitle>Subscription Plans</CardTitle>
-            <CardDescription className="text-white/70">Upgrade your plan to get more features</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-6 md:grid-cols-3">
-              {plans.map((plan) => (
-                <div
-                  key={plan.id}
-                  className={`p-6 rounded-lg border ${
-                    profile?.plan_id === plan.id ? "border-primary glow" : "border-white/10"
-                  } flex flex-col`}
-                >
-                  <div className="mb-4">
-                    <h3 className="text-xl font-semibold">{plan.name}</h3>
-                    <p className="text-2xl font-bold mt-2">
-                      ${plan.price.toFixed(2)}
-                      <span className="text-sm font-normal text-white/70">/mo</span>
-                    </p>
-                  </div>
-                  <div className="flex-1 space-y-2 mb-6">
-                    <div className="flex items-center">
-                      <Shield className="h-4 w-4 text-primary mr-2" />
-                      <span>Max {plan.max_concurrent_attacks} concurrent attacks</span>
-                    </div>
-                    <div className="flex items-center">
-                      <Clock className="h-4 w-4 text-primary mr-2" />
-                      <span>Max {plan.max_time} seconds per attack</span>
-                    </div>
-                  </div>
-                  <Button
-                    variant={profile?.plan_id === plan.id ? "secondary" : "gradient"}
-                    disabled={profile?.plan_id === plan.id || isLoading}
-                    onClick={() => upgradePlan(plan.id)}
-                    className="w-full"
-                  >
-                    {profile?.plan_id === plan.id ? "Current Plan" : "Upgrade"}
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </DashboardLayout>
   )
