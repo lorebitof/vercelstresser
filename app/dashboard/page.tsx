@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { Zap, Clock, History, Settings, Shield, Loader2 } from "lucide-react"
+import { Zap, Clock, History, Settings, Server, Loader2 } from "lucide-react"
 
 import { DashboardLayout } from "@/components/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -18,7 +18,7 @@ export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [profile, setProfile] = useState<{
     id: string
-    username: string // Adicionado
+    username: string
     role: string
     concurrent_attacks: number
     max_concurrent_attacks: number
@@ -27,6 +27,7 @@ export default function DashboardPage() {
   } | null>(null)
   const [attackHistory, setAttackHistory] = useState<any[]>([])
   const [methods, setMethods] = useState<any[]>([])
+  const [totalServers, setTotalServers] = useState(7) // Hardcoded total servers count
 
   useEffect(() => {
     async function fetchData() {
@@ -152,20 +153,13 @@ export default function DashboardPage() {
               <Card className="bg-black/30 border-white/10 text-white">
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center">
-                    <Shield className="mr-2 h-5 w-5 text-primary" />
-                    Current Plan
+                    <Server className="mr-2 h-5 w-5 text-primary" />
+                    Total Servers
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold mb-2">{profile?.plans?.name || "Free"}</div>
-                  <div className="text-white/70 text-sm">
-                    {profile?.plans ? `$${profile.plans.price.toFixed(2)}/month` : "No active subscription"}
-                  </div>
-                  <Link href="https://t.me/udpnfo" passHref>
-                    <Button variant="outline" size="sm" className="mt-4 border-white/20 text-white hover:bg-white/10">
-                      Upgrade Plan
-                    </Button>
-                  </Link>
+                  <div className="text-2xl font-bold mb-2">{totalServers}</div>
+                  <div className="text-white/70 text-sm">Servers available for attacks</div>
                 </CardContent>
               </Card>
 
