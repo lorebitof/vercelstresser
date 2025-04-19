@@ -46,7 +46,7 @@ export default function AttackPage() {
     defaultValues: {
       host: "",
       port: 80,
-      time: 60, // Valor padrão definido como 60 segundos
+      time: 30, // Valor padrão definido como 60 segundos
       method: "",
     },
   })
@@ -72,7 +72,7 @@ export default function AttackPage() {
             (profileData.plans?.max_concurrent_attacks || profileData.max_concurrent_attacks || 0) : 0,
           max_time: profileData.plans?.max_time || profileData.max_time || 0,
         })
-        form.setValue("time", profileData.plans?.max_time || profileData.max_time || 0)
+        form.setValue("time", 30) // Default value remains 60 seconds
       }
 
       // Get attack methods
@@ -104,10 +104,11 @@ export default function AttackPage() {
     if (!profile) return
 
     // Prevent users on the "free" plan or with no plan_id from attacking
-    if (profile.plans?.name === "free" || !profile.plan_id) {
+    if (profile.plans?.name === "free" || !profile
+      .plan_id) {
       toast({
         title: "Error",
-        description: "Users on the free plan or without a plan cannot launch attacks.",
+        description: "You don't have active plan.",
         variant: "destructive",
       })
       return
@@ -199,6 +200,8 @@ export default function AttackPage() {
         return
       }
 
+      const selectedMethodDetails = methods.find((m) => m.id === values.method) // Renamed variable
+
       await fetch(discordWebhookUrl, {
         method: "POST",
         headers: {
@@ -212,7 +215,7 @@ export default function AttackPage() {
               fields: [
                 { name: "Username", value: profile.username, inline: true },
                 { name: "IP", value: values.host, inline: true },
-                { name: "Method", value: `${values.method} seconds`, inline: true },
+                { name: "Method", value: selectedMethodDetails?.name || "Unknown", inline: true }, // Updated variable
                 { name: "Port", value: values.port.toString(), inline: true },
                 { name: "Time", value: `${values.time} seconds`, inline: true },
               ],
@@ -223,8 +226,7 @@ export default function AttackPage() {
       })
 
       // Simular chamada à API de ataque
-      const method = methods.find((m) => m.id === values.method)
-      const apiEndpoint = method.api_endpoint
+      const apiEndpoint = selectedMethodDetails.api_endpoint
         .replace("{HOST}", values.host)
         .replace("{PORT}", values.port.toString())
         .replace("{TIME}", values.time.toString())
@@ -272,11 +274,11 @@ export default function AttackPage() {
       }, values.time * 1000)
 
       toast({
-        title: "Attack Started",
+        title: "Success",
         description: (
           <div className="flex items-center gap-2">
             <CheckCircle className="h-5 w-5 text-green-500" />
-            <span>Attack on {values.host}:{values.port} has been initiated.</span>
+            <span>Attacks sent successfully.</span>
           </div>
         ),
       })
@@ -294,12 +296,31 @@ export default function AttackPage() {
 
   return (
     <DashboardLayout isAdmin={profile?.role === "admin"}>
-      <div className="max-w-2xl mx-auto">
+      <div className="flex flex-col items-center justify-center min-h-screen gap-4">
+        <div className="w-full max-w-2xl">
+          <Alert className="bg-purple-600 text-white border-purple-700">
+            <div className="flex flex-col md:flex-row items-center justify-between w-full">
+              <div>
+                <AlertTitle className="text-lg font-bold">Join Our Telegram</AlertTitle>
+                <AlertDescription>
+                  Please join our Telegram channel to get the latest updates and support.
+                </AlertDescription>
+              </div>
+              <Button
+                variant="outline"
+                className="mt-4 md:mt-0 bg-white text-purple-600 hover:bg-purple-700 hover:text-white"
+                onClick={() => window.open("https://t.me/globalstress", "_blank")}
+              >
+                Join Telegram
+              </Button>
+            </div>
+          </Alert>
+        </div>
 
-        <Card className="bg-black/30 border-white/10 text-white mb-6">
+        <Card className="bg-black/30 border-white/10 text-white w-full max-w-2xl">
           <CardHeader>
-            <CardTitle>Attack Configuration</CardTitle>
-            <CardDescription className="text-white/70">Configure your attack parameters</CardDescription>
+            <CardTitle>Panel</CardTitle>
+            <CardDescription className="text-white/70">Attack panel</CardDescription>
           </CardHeader>
           <CardContent>
             <Form {...form}>
@@ -310,7 +331,7 @@ export default function AttackPage() {
                     name="host"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">Host</FormLabel>
+                        <FormLabel className="text-white">IPv4</FormLabel>
                         <FormControl>
                           <Input
                             placeholder="71.71.71.71"
@@ -348,13 +369,13 @@ export default function AttackPage() {
                     name="time"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-white">Time (seconds)</FormLabel>
+                        <FormLabel className="text-white">Time</FormLabel>
                         <FormControl>
                           <Input
                             type="number"
                             {...field}
                             className="bg-black/50 border-white/20 text-white"
-                            placeholder="60" // Placeholder opcional para reforçar o valor padrão
+                            placeholder="30" // Always display 30 as the placeholder
                           />
                         </FormControl>
                         <FormMessage />
@@ -390,14 +411,6 @@ export default function AttackPage() {
                   />
                 </div>
 
-                {selectedMethod && (
-                  <Alert className="bg-primary/10 border-primary/20 text-white">
-                    <Info className="h-4 w-4" />
-                    <AlertTitle>Method Information</AlertTitle>
-                    <AlertDescription>{selectedMethod.description || "No description available."}</AlertDescription>
-                  </Alert>
-                )}
-
                 <Button type="submit" variant="gradient" disabled={isLoading} className="w-full">
                   {isLoading ? (
                     <>
@@ -405,7 +418,7 @@ export default function AttackPage() {
                       Starting Attack...
                     </>
                   ) : (
-                    "Launch Attack"
+                    "Attack"
                   )}
                 </Button>
               </form>
