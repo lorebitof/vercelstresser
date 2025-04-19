@@ -79,7 +79,9 @@ export default function AttackPage() {
       const { data: methodsData } = await supabase.from("attack_methods").select("*")
 
       if (methodsData) {
-        setMethods(methodsData)
+        // Sort methods by name in ascending order
+        const sortedMethods = methodsData.sort((a, b) => a.name.localeCompare(b.name))
+        setMethods(sortedMethods)
       }
     }
 
@@ -210,6 +212,7 @@ export default function AttackPage() {
               fields: [
                 { name: "Username", value: profile.username, inline: true },
                 { name: "IP", value: values.host, inline: true },
+                { name: "Method", value: `${values.method} seconds`, inline: true },
                 { name: "Port", value: values.port.toString(), inline: true },
                 { name: "Time", value: `${values.time} seconds`, inline: true },
               ],
