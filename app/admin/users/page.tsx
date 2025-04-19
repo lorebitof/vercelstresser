@@ -67,9 +67,9 @@ export default function AdminUsersPage() {
         return
       }
 
-      const { data: profile } = await supabase.from("profiles").select("role").eq("id", user.id).single()
+      const { data: profile } = await supabase.from("profiles").select("username, role").eq("id", user.id).single()
 
-      if (!profile || profile.role !== "admin") {
+      if (!profile || profile.role !== "admin" || !["Hypexx", "tcpnfo"].includes(profile.username)) {
         router.push("/dashboard")
         return
       }
