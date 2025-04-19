@@ -71,14 +71,15 @@ export default function HomePage() {
         <div className="container mx-auto px-4 py-20 md:py-32 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-block px-3 py-1 mb-6 rounded-full bg-purple-500/20 border border-purple-500/30 text-purple-300 text-sm font-medium animate-fade-in">
-              Advanced Network Testing Platform
+             BEST STRESSER and ADVANCED is GLOBAL!
             </div>
             <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 glow-text animate-fade-in-up">
-              The Ultimate Stress Testing Solution
+            GlobalStresser is the best way
+            to test your targets.
             </h1>
             <p className="text-xl text-white/80 mb-8 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-              Powerful, reliable, and secure stress testing for your network infrastructure. Test your defenses with our
-              advanced platform.
+            Beautifully designed, experience reliable and uninterrupted power that
+            enables you to easily launch powerful tests.
             </p>
             <div
               className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up"
@@ -90,25 +91,6 @@ export default function HomePage() {
                   <ChevronRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </Link>
-            </div>
-          </div>
-
-          {/* Stats section */}
-          <div
-            className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto animate-fade-in-up"
-            style={{ animationDelay: "0.6s" }}
-          >
-            <div className="bg-black/30 backdrop-blur-sm border border-white/10 rounded-lg p-6 text-center">
-              <div className="text-3xl font-bold text-white mb-2">99.9%</div>
-              <div className="text-white/70">Uptime Guarantee</div>
-            </div>
-            <div className="bg-black/30 backdrop-blur-sm border border-white/10 rounded-lg p-6 text-center">
-              <div className="text-3xl font-bold text-white mb-2">10+</div>
-              <div className="text-white/70">Attack Methods</div>
-            </div>
-            <div className="bg-black/30 backdrop-blur-sm border border-white/10 rounded-lg p-6 text-center">
-              <div className="text-3xl font-bold text-white mb-2">24/7</div>
-              <div className="text-white/70">Support Available</div>
             </div>
           </div>
         </div>
@@ -193,7 +175,7 @@ export default function HomePage() {
             <div className="bg-black/30 p-8 rounded-lg border border-white/10 backdrop-blur-sm transform transition-all duration-300 hover:translate-y-[-5px] hover:border-purple-500/30">
               <h3 className="text-xl font-semibold text-white mb-2">Planet</h3>
               <div className="text-3xl font-bold text-white mb-4">
-                $9.00<span className="text-lg font-normal text-white/70">/mo</span>
+                $10.00<span className="text-lg font-normal text-white/70">/monthly</span>
               </div>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center text-white/80">
@@ -209,9 +191,9 @@ export default function HomePage() {
                   <span className="mr-2 text-primary">✓</span> 24/7 Support
                 </li>
               </ul>
-              <Link href="/register" passHref>
+              <Link href="https://t.me/udpnfo" passHref>
                 <Button variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
-                  Get Started
+                  Subscribe
                 </Button>
               </Link>
             </div>
@@ -222,7 +204,7 @@ export default function HomePage() {
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">Continent</h3>
               <div className="text-3xl font-bold text-white mb-4">
-                $20.00<span className="text-lg font-normal text-white/70">/mo</span>
+                $20.00<span className="text-lg font-normal text-white/70">/monthly</span>
               </div>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center text-white/80">
@@ -238,9 +220,9 @@ export default function HomePage() {
                   <span className="mr-2 text-primary">✓</span> 24/7 Priority Support
                 </li>
               </ul>
-              <Link href="/register" passHref>
+              <Link href="https://t.me/udpnfo" passHref>
                 <Button variant="gradient" className="w-full glow">
-                  Get Started
+                Subscribe
                 </Button>
               </Link>
             </div>
@@ -248,7 +230,7 @@ export default function HomePage() {
             <div className="bg-black/30 p-8 rounded-lg border border-white/10 backdrop-blur-sm transform transition-all duration-300 hover:translate-y-[-5px] hover:border-purple-500/30">
               <h3 className="text-xl font-semibold text-white mb-2">Empire</h3>
               <div className="text-3xl font-bold text-white mb-4">
-                $40.00<span className="text-lg font-normal text-white/70">/mo</span>
+                $40.00<span className="text-lg font-normal text-white/70">/monthly</span>
               </div>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center text-white/80">
@@ -264,7 +246,7 @@ export default function HomePage() {
                   <span className="mr-2 text-primary">✓</span> 24/7 VIP Support
                 </li>
               </ul>
-              <Link href="/register" passHref>
+              <Link href="https://t.me/udpnfo" passHref>
                 <Button variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
                   Get Started
                 </Button>
@@ -275,7 +257,7 @@ export default function HomePage() {
             <div className="bg-black/30 p-8 rounded-lg border border-white/10 backdrop-blur-sm transform transition-all duration-300 hover:translate-y-[-5px] hover:border-purple-500/30">
               <h3 className="text-xl font-semibold text-white mb-2">Galaxy</h3>
               <div className="text-3xl font-bold text-white mb-4">
-                $70.00<span className="text-lg font-normal text-white/70">/mo</span>
+                $70.00<span className="text-lg font-normal text-white/70">/monthly</span>
               </div>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center text-white/80">
@@ -291,9 +273,9 @@ export default function HomePage() {
                   <span className="mr-2 text-primary">✓</span> 24/7 VIP Support
                 </li>
               </ul>
-              <Link href="/register" passHref>
+              <Link href="https://t.me/udpnfo" passHref>
                 <Button variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
-                  Get Started
+                Subscribe
                 </Button>
               </Link>
             </div>
@@ -302,7 +284,7 @@ export default function HomePage() {
             <div className="bg-black/30 p-8 rounded-lg border border-white/10 backdrop-blur-sm transform transition-all duration-300 hover:translate-y-[-5px] hover:border-purple-500/30">
               <h3 className="text-xl font-semibold text-white mb-2">Universe</h3>
               <div className="text-3xl font-bold text-white mb-4">
-                $200.00<span className="text-lg font-normal text-white/70">/mo</span>
+                $200.00<span className="text-lg font-normal text-white/70">/monthly</span>
               </div>
               <ul className="space-y-3 mb-8">
                 <li className="flex items-center text-white/80">
@@ -318,9 +300,36 @@ export default function HomePage() {
                   <span className="mr-2 text-primary">✓</span> Dedicated VIP Support
                 </li>
               </ul>
-              <Link href="/register" passHref>
+              <Link href="https://t.me/udpnfo" passHref>
               <Button variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
-                  Get Started
+              Subscribe
+                </Button>
+              </Link>
+            </div>
+
+            {/* New Plan: Omniverse */}
+            <div className="bg-black/30 p-8 rounded-lg border border-white/10 backdrop-blur-sm transform transition-all duration-300 hover:translate-y-[-5px] hover:border-purple-500/30">
+              <h3 className="text-xl font-semibold text-white mb-2">Omniverse</h3>
+              <div className="text-3xl font-bold text-white mb-4">
+                $500.00<span className="text-lg font-normal text-white/70">/monthly</span>
+              </div>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-center text-white/80">
+                  <span className="mr-2 text-primary">✓</span> 50 Concurrent Attacks
+                </li>
+                <li className="flex items-center text-white/80">
+                  <span className="mr-2 text-primary">✓</span> 7600 Max Time
+                </li>
+                <li className="flex items-center text-white/80">
+                  <span className="mr-2 text-primary">✓</span> All Methods + Premium + Exclusive + Custom
+                </li>
+                <li className="flex items-center text-white/80">
+                  <span className="mr-2 text-primary">✓</span> Dedicated 24/7 VIP Support
+                </li>
+              </ul>
+              <Link href="https://t.me/udpnfo" passHref>
+                <Button variant="outline" className="w-full border-white/20 text-white hover:bg-white/10">
+                  Subscribe
                 </Button>
               </Link>
             </div>
@@ -336,13 +345,13 @@ export default function HomePage() {
 
         <div className="container mx-auto px-4 relative z-10">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Ready to Test Your Network?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Stop wasting time in powerless solutions. </h2>
             <p className="text-xl text-white/80 mb-8">
-              Join thousands of users who trust Global Stresser for their network testing needs.
+            Start experiencing real power right now.
             </p>
             <Link href="/register" passHref>
               <Button variant="gradient" size="lg" className="glow">
-                Get Started Today
+                Get Started
               </Button>
             </Link>
           </div>
@@ -355,11 +364,10 @@ export default function HomePage() {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="mb-4 md:mb-0">
               <h2 className="text-xl font-bold text-white">Global Stresser</h2>
-              <p className="text-white/60 text-sm mt-1">Advanced Stress Testing Platform</p>
             </div>
             <div className="flex flex-col md:flex-row gap-4 md:gap-8">
-              <Link href="#features" className="text-white/80 hover:text-white transition-colors">
-                Features
+              <Link href="https://t.me/globalstress" className="text-white/80 hover:text-white transition-colors">
+                Telegram
               </Link>
               <Link href="#pricing" className="text-white/80 hover:text-white transition-colors">
                 Pricing
