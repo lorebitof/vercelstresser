@@ -109,14 +109,11 @@ export default function SettingsPage() {
     <DashboardLayout isAdmin={profile?.role === "admin"}>
       <div className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-bold text-white">Account Settings</h1>
-          <p className="text-white/70">Manage your account and subscription</p>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
           <Card className="bg-black/30 border-white/10 text-white">
             <CardHeader>
-              <CardTitle>Account Information</CardTitle>
               <CardDescription className="text-white/70">Your account details</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -125,12 +122,14 @@ export default function SettingsPage() {
                 <p className="text-white">{profile?.username}</p>
               </div>
               <div>
-                <h3 className="text-sm font-medium text-white/70">Role</h3>
-                <p className="text-white capitalize">{profile?.role}</p>
+                <h3 className="text-sm font-medium text-white/70">ID</h3>
+                <p className="text-white">{profile?.id}</p>
               </div>
               <div>
                 <h3 className="text-sm font-medium text-white/70">Current Plan</h3>
-                <p className="text-white">{profile?.plans?.name || "Free"}</p>
+                <p className="text-white">
+                  {profile?.plans?.name || "None"} — ({profile?.plans ? `${profile.plans.max_concurrent_attacks} concs - ${profile.plans.max_time} seconds)` : "N/A"}
+                </p>
               </div>
               <div>
                 <h3 className="text-sm font-medium text-white/70">Member Since</h3>
