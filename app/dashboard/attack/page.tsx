@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { Loader2, Info } from "lucide-react"
+import { Loader2, Info, CheckCircle } from "lucide-react" // Added CheckCircle
 
 import { DashboardLayout } from "@/components/dashboard-layout"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -190,7 +190,7 @@ export default function AttackPage() {
       })
 
       // Enviar log do ataque via Discord webhook
-      const discordWebhookUrl = process.env.NEXT_PUBLIC_DISCORD_WEBHOOK_URL
+      const discordWebhookUrl = "=https://discord.com/api/webhooks/1362629222329483525/FAczRfDpwnU8e6snnfX_yAsEP81McWzxrUoYfC7Gv093FKSdwIAqgeNOc4VJRHyrqIHm"
       if (!discordWebhookUrl) {
         console.error("Discord webhook URL is not configured.")
         return
@@ -269,7 +269,12 @@ export default function AttackPage() {
 
       toast({
         title: "Attack Started",
-        description: `Attack on ${values.host}:${values.port} has been initiated.`,
+        description: (
+          <div className="flex items-center gap-2">
+            <CheckCircle className="h-5 w-5 text-green-500" />
+            <span>Attack on {values.host}:{values.port} has been initiated.</span>
+          </div>
+        ),
       })
     } catch (error: any) {
       toast({
