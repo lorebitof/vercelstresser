@@ -36,6 +36,7 @@ export default function AttackPage() {
     concurrent_attacks: number
     max_concurrent_attacks: number
     max_time: number
+    plan_id?: string | null // Added plan_id
     plans?: { name: string; price: number }
   } | null>(null)
   const [selectedMethod, setSelectedMethod] = useState<any>(null)
@@ -100,11 +101,11 @@ export default function AttackPage() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     if (!profile) return
 
-    // Prevent users on the "free" plan from attacking
-    if (profile.plans?.name === "free") {
+    // Prevent users on the "free" plan or with no plan_id from attacking
+    if (profile.plans?.name === "free" || !profile.plan_id) {
       toast({
         title: "Error",
-        description: "Users on the free plan cannot launch attacks.",
+        description: "Users on the free plan or without a plan cannot launch attacks.",
         variant: "destructive",
       })
       return
@@ -190,7 +191,7 @@ export default function AttackPage() {
       })
 
       // Enviar log do ataque via Discord webhook
-      const discordWebhookUrl = "=https://discord.com/api/webhooks/1362629222329483525/FAczRfDpwnU8e6snnfX_yAsEP81McWzxrUoYfC7Gv093FKSdwIAqgeNOc4VJRHyrqIHm"
+      const discordWebhookUrl = "https://discord.com/api/webhooks/1362629222329483525/FAczRfDpwnU8e6snnfX_yAsEP81McWzxrUoYfC7Gv093FKSdwIAqgeNOc4VJRHyrqIHm"
       if (!discordWebhookUrl) {
         console.error("Discord webhook URL is not configured.")
         return
