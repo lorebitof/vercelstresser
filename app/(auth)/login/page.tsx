@@ -62,7 +62,10 @@ export default function LoginPage() {
   return (
     <div className="flex min-h-screen items-center justify-center gradient-bg p-4">
       <div className="w-full max-w-md space-y-10">
+        {/* Title and Subtitle */}
         <div className="text-center">
+          <h1 className="text-3xl font-bold text-white">Sign In</h1>
+          <p className="text-white/70 mt-2">Sign in to access all features.</p>
         </div>
 
         <div className="bg-black/40 p-10 rounded-xl backdrop-blur-md border border-white/20 shadow-lg">
@@ -118,14 +121,14 @@ export default function LoginPage() {
                     Signing in...
                   </>
                 ) : (
-                  "Sign In"
+                  "Login"
                 )}
               </Button>
 
               <div className="text-center text-sm text-white/70">
-                Don't have an account?{" "}
+              You don't have an account yet?{" "}
                 <Link href="/register" className="text-primary font-medium hover:underline">
-                  Register
+                  Sign up
                 </Link>
               </div>
             </form>
