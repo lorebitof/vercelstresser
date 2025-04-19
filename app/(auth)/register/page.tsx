@@ -102,7 +102,10 @@ export default function RegisterPage() {
   return (
     <div className="flex min-h-screen items-center justify-center gradient-bg p-4">
       <div className="w-full max-w-md space-y-10">
+        {/* Title and Subtitle */}
         <div className="text-center">
+          <h1 className="text-3xl font-bold text-white">Sign Up</h1>
+          <p className="text-white/70 mt-2">register to access all features.</p>
         </div>
 
         <div className="bg-black/40 p-10 rounded-xl backdrop-blur-md border border-white/20 shadow-lg">
@@ -183,7 +186,7 @@ export default function RegisterPage() {
               <div className="text-center text-sm text-white/70">
                 Already have an account?{" "}
                 <Link href="/login" className="text-primary font-medium hover:underline">
-                  Login
+                  Sign in
                 </Link>
               </div>
             </form>
