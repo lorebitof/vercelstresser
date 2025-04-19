@@ -286,7 +286,6 @@ export default function AttackPage() {
   return (
     <DashboardLayout isAdmin={profile?.role === "admin"}>
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold text-white mb-6">Launch Attack</h1>
 
         <Card className="bg-black/30 border-white/10 text-white mb-6">
           <CardHeader>
