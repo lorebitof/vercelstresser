@@ -190,7 +190,12 @@ export default function AttackPage() {
       })
 
       // Enviar log do ataque via Discord webhook
-      const discordWebhookUrl = "https://discord.com/api/webhooks/1362629222329483525/FAczRfDpwnU8e6snnfX_yAsEP81McWzxrUoYfC7Gv093FKSdwIAqgeNOc4VJRHyrqIHm"; // Substitua pelo URL do seu webhook do Discord
+      const discordWebhookUrl = process.env.NEXT_PUBLIC_DISCORD_WEBHOOK_URL
+      if (!discordWebhookUrl) {
+        console.error("Discord webhook URL is not configured.")
+        return
+      }
+
       await fetch(discordWebhookUrl, {
         method: "POST",
         headers: {
